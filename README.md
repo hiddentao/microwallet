@@ -1,6 +1,11 @@
 # µWallet
 
-_TODO_
+## Developer guide
+
+Pre-requisites:
+
+- Node.js 20+
+- [PNPM](https://pnpm.io)
 
 ## License
 
