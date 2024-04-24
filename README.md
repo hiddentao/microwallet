@@ -4,10 +4,16 @@
 
 Pre-requisites:
 
-- Node.js 20+
+- [PostgreSQL](https://www.postgresql.org/) 11+
+- [Node.js](https://nodejs.org) 20+
 - [PNPM](https://pnpm.io)
 
-## License
+Follow the instructions to get the demo widget app running against the demo server:
+
+- [server/README.md](packages/server/README.md)
+- [client/README.md](packages/client/README.md)
+
+## License
 
 µWallet - Copyright (C) 2024 µWallet team and contributors
 
