@@ -1,10 +1,10 @@
 {
-  "name": "microwallet-web3",
+  "name": "@microwallet/monorepo",
   "version": "1.0.0",
-  "description": "",
+  "description": "Microwallet monorepo",
+  "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "format": "prettier --write .",
     "prepare": "husky"
@@ -16,9 +16,6 @@
     "node": ">=20.0.0"
   },
   "lint-staged": {
-    "**/*.{js,ts,tsx}": [
-      "eslint --fix"
-    ],
     "**/*": "prettier --write --ignore-unknown"
   },
   "type": "module",
