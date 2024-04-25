@@ -15,9 +15,6 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
-  },
   "type": "module",
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
