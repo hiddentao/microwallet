@@ -19,7 +19,6 @@ model Setting {
 model User {
   @@map("users")
   id    Int     @id @default(autoincrement())
-  wallet String  @unique
   notifications Notification[]
 }
 

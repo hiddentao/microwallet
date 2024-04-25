@@ -10,6 +10,12 @@ Pre-requisites:
 
 Ensure your postgres server is running at port `5432`. You should have an admin user called `postgres` with no password enabled. Create a database called `microwallet` and ensure the `postgres` user is the owner.
 
+Install packages:
+
+```shell
+$ pnpm i
+```
+
 Run the local devnet node in a terminal:
 
 ```shell
@@ -32,4 +38,4 @@ Visit http://localhost:3000 in the browser to interact.
 
 ## License
 
-AGPLv3 - see [../../]
+AGPLv3 - see [../../LICENSE.md]
