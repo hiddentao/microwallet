@@ -77,7 +77,7 @@ export const GlobalProvider: FC<React.PropsWithChildren> = ({ children }) => {
         setIsAblyConnecting(false)
       }
     }
-  }, [session.status, session.data, ably, isAblyConnecting])
+  }, [session.status, session.data, isAblyConnecting, ably])
 
   return (
     <GlobalContext.Provider
