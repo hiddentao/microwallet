@@ -103,6 +103,7 @@
     ]
   },
   "prisma": {
-    "schema": "./src/backend/prisma/schema.prisma"
+    "schema": "./src/backend/prisma/schema.prisma",
+    "seed": "node_modules/.bin/ts-node ./src/backend/prisma/seed.ts"
   }
 }

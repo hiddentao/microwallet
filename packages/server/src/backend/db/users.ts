@@ -73,33 +73,35 @@ export const getUser = async (app: BootstrappedApp, userId: number) => {
 export const getOrCreateDappWallet = async (
   app: BootstrappedApp,
   user: User,
-  dappId: String,
+  dappKey: string,
 ) => {
   return retryTransaction(app.log, 3, async () => {
     return await app.db.$transaction(
       async (tx: any) => {
         const dapp = await tx.dapp.findFirst({
           where: {
-            id: dappId,
+            key: dappKey,
           },
         });
 
         if (!dapp) {
-          throwError(`Dapp not found: ${dappId}`, ErrorCode.NOT_FOUND);
+          throwError(`Dapp not found: ${dappKey}`, ErrorCode.NOT_FOUND);
         }
 
         app.log.trace(
-          `Upserting wallet for user ${user.id} and dapp ${dappId}`,
+          `Upserting wallet for user ${user.id} and dapp ${dapp.id}`,
         );
 
         return await tx.userWallet.upsert({
           where: {
-            userId: user.id,
-            dappId,
+            userId_dappId: {
+              userId: user.id,
+              dappId: dapp.id,
+            },
           },
           update: {},
           create: {
-            dappId,
+            dappId: dapp.id,
             userId: user.id,
             key: generateKey(32),
           },

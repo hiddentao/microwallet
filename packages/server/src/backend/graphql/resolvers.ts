@@ -3,7 +3,7 @@ import {
   getOrCreateDappWallet,
   getUser,
 } from '../db/users';
-import { ONE_MINUTE } from '@microwallet/shared';
+import { ONE_MINUTE, defaultResolvers } from '@microwallet/shared';
 import { BootstrappedApp } from '../bootstrap';
 import {
   generateVerificationCodeAndBlob,
@@ -25,6 +25,7 @@ export const createResolvers = (app: BootstrappedApp) => {
   const log = app.log.create('res');
 
   return {
+    ...defaultResolvers,
     Query: {
       getMyUnreadNotificationsCount: async (_, __, ctx: Context) => {
         log.trace(`getMyUnreadNotificationsCount`);
@@ -151,7 +152,7 @@ export const createResolvers = (app: BootstrappedApp) => {
       verifyEmailCode: async (_, { params }) => {
         log.trace(`verifyEmailCode`);
 
-        const { dappId, code, blob } = params;
+        const { dappKey, code, blob } = params;
 
         let email: string;
 
@@ -171,7 +172,7 @@ export const createResolvers = (app: BootstrappedApp) => {
           providerAccountId: email,
         });
 
-        const wallet = await getOrCreateDappWallet(app, user, dappId);
+        const wallet = await getOrCreateDappWallet(app, user, dappKey);
 
         return {
           serverKey: wallet.key,

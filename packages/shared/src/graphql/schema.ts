@@ -5,6 +5,7 @@ export const schema = gql`
   scalar DateTime
   scalar JSON
   scalar PositiveInt
+  scalar BigInt
 
   type ErrorDetails {
     code: String
@@ -39,7 +40,7 @@ export const schema = gql`
   }
 
   input EmailVerificationDataInput {
-    dappId: String!
+    dappKey: String!
     code: String!
     blob: String!
   }

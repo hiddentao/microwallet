@@ -8,7 +8,7 @@ import { ErrorCode, throwError } from '@microwallet/shared';
 import { schema } from '@microwallet/shared';
 import { createResolvers } from '../../src/backend/graphql/resolvers';
 import { directives } from '@microwallet/shared';
-import { Context } from '@/backend/lib/context';
+import { Context } from '../../src/backend/lib/context';
 
 //
 // Code below based on: https://github.com/apollo-server-integrations/apollo-server-integration-next/blob/0df99b74eece9cdba368920b49549855ebb27c1b/src/startServerAndCreateNextHandler.ts
@@ -47,7 +47,7 @@ export default async function handler(
 
   const httpGraphQLResponse = await server.executeHTTPGraphQLRequest({
     context: async () => {
-      let ctx: Context = {};
+      const ctx: Context = {};
 
       // decode logged-in user
       // const session = await getServerSession(req, res, authOptions);
@@ -75,7 +75,6 @@ export default async function handler(
   // flush logs
   await app.log.flush();
 
-  /* @ts-ignore */
   for (const [key, value] of httpGraphQLResponse.headers) {
     res.setHeader(key, value);
   }

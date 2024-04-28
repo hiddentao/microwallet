@@ -1,7 +1,7 @@
 import { LogInterface } from '../logging';
 import { decrypt, encrypt } from './crypto';
 import { serverConfig } from '@/config/server';
-import { ONE_HOUR } from '@microwallet/shared';
+import { ONE_HOUR, truncate } from '@microwallet/shared';
 
 export interface VerifyEmailCodeBlob {
   email: string;
@@ -10,8 +10,6 @@ export interface VerifyEmailCodeBlob {
 }
 
 const _getCryptoParams = () => {
-  const len = serverConfig.SESSION_ENCRYPTION_KEY.length;
-
   return {
     key: serverConfig.SESSION_ENCRYPTION_KEY.substring(0, 32),
     iv: serverConfig.SESSION_ENCRYPTION_KEY.substring(32, 48),
@@ -46,7 +44,7 @@ export const verifyCodeWithBlob = async (
   code: string,
   blob: string,
 ): Promise<string> => {
-  log.debug(`Verifying code ${code} with blob ${blob}`);
+  log.debug(`Verifying code ${code} with blob ${truncate(blob)}`);
 
   const cryptoParams = _getCryptoParams();
 

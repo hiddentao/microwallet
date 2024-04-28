@@ -1,12 +1,14 @@
-import { useCallback, useMemo, useState } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
 import { useProgress } from '@rjshooks/use-progress'
-import { useSendVerificationEmail } from '../hooks/api'
+import { useSendVerificationEmail, useVerifyEmailCode } from '../hooks/api'
 import { useField } from '../hooks/forms'
 import { TextInput } from './Form'
 import { Button } from './Button'
+import { onCancel } from '@/utils'
+import { Wallet } from '@microwallet/shared'
+import { ErrorMessageBox } from './ErrorMessageBox'
 
-export const Email = () => {
-  const [blob, setBlob] = useState<string>()
+const EmailInput: FC<{ onBlob: (blob: string) => void }> = ({ onBlob }) => {
   const progress = useProgress()
 
   const [email] = [
@@ -30,23 +32,19 @@ export const Email = () => {
       try {
         progress.setActiveStep('Sending verification email')
         const data = await sendVerification.mutateAsync(email.value)
-        setBlob(data.result.blob)
+        onBlob(data.result.blob)
         progress.setCompleted()
       } catch (err: any) {
         console.error(err)
         progress.setError(err.message)
       }
     },
-    [email.value, progress, sendVerification],
+    [email.value, onBlob, progress, sendVerification],
   )
 
   const isLoading = useMemo(() => {
     return progress.inProgress
   }, [progress.inProgress])
-
-  useMemo(() => {
-    return blob + '1'
-  }, [blob])
 
   return (
     <form onSubmit={handleSubmit}>
@@ -54,6 +52,82 @@ export const Email = () => {
       <Button type="submit" inProgress={isLoading}>
         Send code
       </Button>
+      {progress.error ? <ErrorMessageBox>{progress.error}</ErrorMessageBox> : null}
     </form>
+  )
+}
+
+const VerifyCode: FC<{ 
+  blob: string,
+  onVerified: (serverKey: string) => void, 
+  onCancel: onCancel 
+}> = ({ blob, onVerified, onCancel }) => {
+  const progress = useProgress()
+
+  const [code] = [
+    useField({
+      name: 'code',
+      initialValue: '',
+    }),
+  ]
+
+  // const { valid, isValidating, formError, reset } = useForm({
+  //   fields: [email],
+  // });
+
+  const verifyCode = useVerifyEmailCode()
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+      progress.reset()
+
+      try {
+        progress.setActiveStep('Sending verification email')
+        const data = await verifyCode.mutateAsync({
+          blob,
+          code: code.value,
+          dappKey: 'test-dapp-1',
+        })
+        onVerified((data.result as Wallet).serverKey)
+        progress.setCompleted()
+      } catch (err: any) {
+        console.error(err)
+        progress.setError(err.message)
+      }
+    },
+    [progress, verifyCode, blob, code.value, onVerified],
+  )
+
+  const isLoading = useMemo(() => {
+    return progress.inProgress
+  }, [progress.inProgress])
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <TextInput field={code} placeholder="Code" type="number" />
+      <Button type="submit" inProgress={isLoading}>
+        Verify code
+      </Button>
+      <Button type="button" onClick={onCancel}>Cancel</Button>
+    </form>
+  )
+}
+
+export const Email = () => {
+  const [blob, setBlob] = useState<string>()
+
+  const onVerified = useCallback((serverKey: string) => {
+    console.log(serverKey)
+  }, [])
+
+  const onCancel = useCallback(() => {  
+    setBlob(undefined)
+  }, [])
+
+  return blob ? (
+    <VerifyCode blob={blob} onVerified={onVerified} onCancel={onCancel} />
+  ) : (
+    <EmailInput onBlob={setBlob} />
   )
 }

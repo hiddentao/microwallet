@@ -1,8 +1,8 @@
 import globals from 'globals'
 import pluginJs from '@eslint/js'
 import tseslint from 'typescript-eslint'
-import eslintConfigPrettier from 'eslint-config-prettier'
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+// import eslintConfigPrettier from 'eslint-config-prettier'
+// import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import eslintPluginReact from 'eslint-plugin-react'
 import eslintPluginNext from '@next/eslint-plugin-next'
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
@@ -11,12 +11,13 @@ export default [
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
-  eslintConfigPrettier,
-  eslintPluginPrettierRecommended,
+  // eslintConfigPrettier,
+  // eslintPluginPrettierRecommended,
   {
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+      // 'prettier/no-multiple-empty-lines': 'off',
     },
   },
   {
