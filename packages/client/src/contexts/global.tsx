@@ -1,5 +1,5 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { FC, useContext } from "react";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { FC, useContext } from 'react';
 
 export interface GlobalContextValue {
   apiEndpoint: string;
@@ -11,18 +11,18 @@ export interface GlobalContextProviderConfig {
 
 export const GlobalContext = React.createContext({} as GlobalContextValue);
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
-export const GlobalProvider: FC<React.PropsWithChildren<GlobalContextProviderConfig>> = ({ children, apiEndpoint }) => {
+export const GlobalProvider: FC<
+  React.PropsWithChildren<GlobalContextProviderConfig>
+> = ({ children, apiEndpoint }) => {
   return (
     <GlobalContext.Provider
       value={{
         apiEndpoint,
       }}
     >
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </GlobalContext.Provider>
   );
 };

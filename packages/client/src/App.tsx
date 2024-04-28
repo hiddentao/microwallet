@@ -1,5 +1,5 @@
-import { GlobalProvider } from "./contexts/global";
-import { Email } from "./ui/Email";
+import { GlobalProvider } from './contexts/global';
+import { Email } from './ui/Email';
 
 export const App = () => {
   return (
@@ -9,4 +9,4 @@ export const App = () => {
       </div>
     </GlobalProvider>
   );
-}
+};

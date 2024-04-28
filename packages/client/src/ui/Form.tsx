@@ -1,7 +1,7 @@
 import { FieldApi } from '../hooks/forms';
 import { PropsWithClassName, cn } from '../utils';
-import { FC, PropsWithChildren, ReactNode, useCallback, useMemo } from 'react'
-import { Loading } from './Loading'
+import { FC, PropsWithChildren, ReactNode, useCallback, useMemo } from 'react';
+import { Loading } from './Loading';
 
 export const FieldError: FC<PropsWithClassName<{ error?: string }>> = ({
   error,
@@ -208,4 +208,3 @@ export const TextArea = (props: TextFieldProps & { rows?: number }) => {
     </div>
   );
 };
-
