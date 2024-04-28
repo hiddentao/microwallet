@@ -15,6 +15,7 @@ const _assertCryptoParams = (params: CryptoParams) => {
   }
 };
 
+
 export const decrypt = async (
   log: LogInterface,
   cryptoParams: CryptoParams,

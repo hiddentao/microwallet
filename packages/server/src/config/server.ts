@@ -67,6 +67,12 @@ export const serverConfig = (() => {
         .asString(),
     } as ServerConfigInterface;
 
+    if (!ret.SESSION_ENCRYPTION_KEY.match(/^[A-Fa-f0-9]{64,}$/)) {
+      throw new Error(
+        `Please set SESSION_ENCRYPTION_KEY to a unique 64-character hex value in .env.*`,
+      );
+    }
+
     return Object.freeze(ret);
   } catch (err) {
     console.error(`Error loading server-side config`);
