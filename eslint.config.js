@@ -14,6 +14,12 @@ export default [
   eslintConfigPrettier,
   eslintPluginPrettierRecommended,
   {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+  {
     files: ['packages/server/**/*.ts', 'packages/server/**/*.tsx'],
     plugins: {
       react: eslintPluginReact,

@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
+import { useProgress } from '@rjshooks/use-progress'
 import { useSendVerificationEmail } from '../hooks/api'
 import { useField } from '../hooks/forms'
 import { TextInput } from './Form'
@@ -6,8 +7,7 @@ import { Button } from './Button'
 
 export const Email = () => {
   const [blob, setBlob] = useState<string>()
-
-  console.log(blob)
+  const progress = useProgress()
 
   const [email] = [
     useField({
@@ -25,20 +25,24 @@ export const Email = () => {
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
+      progress.reset()
 
       try {
+        progress.setActiveStep('Sending verification email')
         const data = await sendVerification.mutateAsync(email.value)
         setBlob(data.result.blob)
-      } catch (err) {
+        progress.setCompleted()
+      } catch (err: any) {
         console.error(err)
+        progress.setError(err.message)
       }
     },
-    [email.value, sendVerification],
+    [email.value, progress, sendVerification],
   )
 
   const isLoading = useMemo(() => {
-    return sendVerification.isPending
-  }, [sendVerification.isPending])
+    return progress.inProgress
+  }, [progress.inProgress])
 
   useMemo(() => {
     return blob + '1'
