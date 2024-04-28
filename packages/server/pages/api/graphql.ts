@@ -3,13 +3,12 @@ import { parse } from 'url';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ApolloServer, HeaderMap } from '@apollo/server';
 
-import { getServerSession } from 'next-auth';
-import { authOptions } from './auth/[...nextauth]';
 import { bootstrap } from '../../src/backend/bootstrap';
-import { ErrorCode, throwError } from '../../src/shared/errors';
-import { schema } from '../../src/shared/graphql/schema';
+import { ErrorCode, throwError } from '@microwallet/shared';
+import { schema } from '@microwallet/shared';
 import { createResolvers } from '../../src/backend/graphql/resolvers';
-import { directives } from '../../src/shared/graphql/generated/directives';
+import { directives } from '@microwallet/shared';
+import { Context } from '@/backend/lib/context';
 
 //
 // Code below based on: https://github.com/apollo-server-integrations/apollo-server-integration-next/blob/0df99b74eece9cdba368920b49549855ebb27c1b/src/startServerAndCreateNextHandler.ts
@@ -39,18 +38,18 @@ export default async function handler(
 
   const httpGraphQLResponse = await server.executeHTTPGraphQLRequest({
     context: async () => {
-      let ctx: any = {};
+      let ctx: Context = {};
 
       // decode logged-in user
-      const session = await getServerSession(req, res, authOptions);
-      if (session && get(session, 'user')) {
-        ctx = {
-          user: session.user,
-        };
-      }
+      // const session = await getServerSession(req, res, authOptions);
+      // if (session && get(session, 'user')) {
+      //   ctx = {
+      //     user: session.user,
+      //   };
+      // }
 
       // route is authenticated?
-      if (directives.auth.includes(req.body.operationName) && !ctx.user) {
+      if (directives.auth.includes(req.body.operationName) && !ctx.userId) {
         throwError('Not authenticated', ErrorCode.UNAUTHORIZED);
       }
 

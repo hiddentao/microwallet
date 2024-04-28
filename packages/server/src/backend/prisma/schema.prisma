@@ -16,10 +16,59 @@ model Setting {
   updatedAt DateTime @default(now())
 }
 
+model Dapp {
+  @@map("dapps")
+  id    Int     @id @default(autoincrement())
+  key String @unique
+  name String
+  wallets UserWallet[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
 model User {
   @@map("users")
   id    Int     @id @default(autoincrement())
   notifications Notification[]
+  accounts UserAccount[]
+  wallets UserWallet[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model UserWallet {
+  @@map("user_wallets")
+  @@unique([userId, dappId])
+  id    Int     @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+  dappId Int
+  dapp   Dapp @relation(fields: [dappId], references: [id])
+  key String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+enum UserAccountProvider {
+  GOOGLE
+  FACEBOOK
+  TWITTER
+  INSTAGRAM
+  TIKTOK
+  GITHUB
+  EMAIL
+}
+
+model UserAccount {
+  @@map("user_accounts")
+  @@unique([provider, providerUserId])
+  id    Int     @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+  provider UserAccountProvider
+  providerUserId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 model Notification {

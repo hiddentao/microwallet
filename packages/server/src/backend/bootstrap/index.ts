@@ -1,8 +1,8 @@
 import Ably from 'ably';
-import { Mailer } from '../mailer';
+import { DummyMailer, Mailer, MailgunMailer } from '../mailer';
 import { createLog } from '../logging';
 import { serverConfig } from '../../config/server';
-import { PubSubMessageType } from '@/shared/pubsub';
+import { PubSubMessageType } from '@microwallet/shared';
 import { User, connectDb, createNotification } from '../db';
 
 export interface BootstrapParams {
@@ -11,7 +11,7 @@ export interface BootstrapParams {
 }
 
 export interface BootstrappedApp {
-  mailer?: Mailer;
+  mailer: Mailer;
   ably?: Ably.Rest & {
     notifyUser: (
       wallet: string,
@@ -61,18 +61,21 @@ export const bootstrap = ({
     };
   }
 
-  let mailer: Mailer | undefined;
+  let mailer: Mailer;
   if (
     serverConfig.MAILGUN_API_KEY &&
     serverConfig.MAILGUN_API_ENDPOINT &&
     serverConfig.MAILGUN_FROM_ADDRESS
   ) {
-    mailer = new Mailer({
+    mailer = new MailgunMailer({
       log,
       apiKey: serverConfig.MAILGUN_API_KEY,
       endpoint: serverConfig.MAILGUN_API_ENDPOINT,
       fromAddress: serverConfig.MAILGUN_FROM_ADDRESS,
     });
+  } else {
+    log.warn('No mailer configured, using dummy mailer');
+    mailer = new DummyMailer(log);
   }
 
   const app = {
@@ -82,7 +85,7 @@ export const bootstrap = ({
     mailer,
     notifyUser: async (user: User, data: object) => {
       await createNotification(db, user.id, data);
-      ably?.notifyUser(user.wallet, PubSubMessageType.NEW_NOTIFICATIONS);
+      ably?.notifyUser(user.id, PubSubMessageType.NEW_NOTIFICATIONS);
     },
   };
 

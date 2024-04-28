@@ -20,8 +20,48 @@ export interface MailerSendParams {
   }[];
 }
 
-export class Mailer {
-  private log: LogInterface;
+export abstract class Mailer {
+  protected log: LogInterface;
+
+  constructor(log: LogInterface) {
+    this.log = log;
+  }
+
+  send(params: MailerSendParams): Promise<void> {
+    const { to, subject } = params;
+
+    this.log.info(`Sending email to ${to} with subject ${subject}`);
+
+    return this._doSend(params);
+  }
+
+  protected abstract _doSend(params: MailerSendParams): Promise<void>;
+}
+
+export class DummyMailer extends Mailer {
+  constructor(log: LogInterface) {
+    super(log.create('dummyMailer'));
+  }
+
+  protected _doSend(params: MailerSendParams): Promise<void> {
+    const { to, replyTo, subject, text, html = '', attachments = [] } = params;
+
+    this.log.info(`
+DummyMailer send:
+
+to: ${to}
+replyTo: ${replyTo}
+subject: ${subject}
+text: ${text}
+html: ${html}
+attachments: ${attachments.map((a) => `${a.filename} (${a.contentType}`).join(', ')}
+`);
+
+    return Promise.resolve();
+  }
+}
+
+export class MailgunMailer extends Mailer {
   private fromAddress: string;
   private domain: string;
   private mailClient: IMailgunClient;
@@ -33,10 +73,10 @@ export class Mailer {
     fromAddress: string;
   }) {
     const { log, apiKey, endpoint, fromAddress } = params;
+    super(log.create('mailgunMailer'));
 
     this.fromAddress = fromAddress;
     this.domain = fromAddress.split('@')[1];
-    this.log = log.create('mailer');
     this.mailClient = mailgun.client({
       username: 'api',
       url: endpoint,
@@ -44,15 +84,13 @@ export class Mailer {
     });
   }
 
-  async send(params: MailerSendParams) {
+  async _doSend(params: MailerSendParams): Promise<void> {
     const { to, replyTo, subject, text, html = '', attachments = [] } = params;
 
     const att = this._prepareAttachments(attachments);
 
-    this.log.info(`Sending email to ${to} with subject ${subject}`);
-
     this.log.debug(`
-Mailer is sending:
+Sending:
 
 to: ${to}
 replyTo: ${replyTo}

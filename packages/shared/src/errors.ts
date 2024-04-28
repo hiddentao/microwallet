@@ -1,6 +1,8 @@
 export enum ErrorCode {
   INTERNAL = 'INTERNAL', // internal error
   UNAUTHORIZED = 'UNAUTHORIZED', // unauthorized access
+  NOT_FOUND = 'NOT_FOUND', // not found
+  VERIFICATION_ERROR = 'VERIFICATION_ERROR', // verification error
 }
 
 export interface ErrorWithCode extends Error {

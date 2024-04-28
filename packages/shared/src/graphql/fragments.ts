@@ -15,6 +15,12 @@ export const SuccessFragment = graphql(`
   }
 `);
 
+export const WalletFragment = graphql(`
+  fragment WalletFragment on Wallet {
+    serverKey
+  }
+`);
+
 export const NotificationFragment = graphql(`
   fragment NotificationFragment on Notification {
     id
@@ -32,5 +38,16 @@ export const MyNotificationsFragment = graphql(`
     }
     startIndex
     total
+  }
+`);
+
+export const EmailCodeVerificationResultFragment = graphql(`
+  fragment EmailCodeVerificationResultFragment on EmailCodeVerificationResult {
+    ... on Wallet {
+      ...WalletFragment
+    }
+    ... on Error {
+      ...ErrorFragment
+    }
   }
 `);

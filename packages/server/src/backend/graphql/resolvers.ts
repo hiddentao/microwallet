@@ -1,18 +1,25 @@
-import { getUser } from '../db/users';
-import { DefaultSession } from 'next-auth';
-import { ONE_MINUTE } from '@/shared/date';
+import {
+  createUserIfNotExists,
+  getOrCreateDappWallet,
+  getUser,
+} from '../db/users';
+import { ONE_MINUTE } from '@microwallet/shared';
 import { BootstrappedApp } from '../bootstrap';
-import { Resolvers } from '@/shared/graphql/generated/types';
+import {
+  generateVerificationCodeAndBlob,
+  verifyCodeWithBlob,
+} from '../lib/verifyEmail';
+import { Resolvers } from '@microwallet/shared';
 import {
   getNotificationsForUser,
   getUnreadNotificationsCountForUser,
   markAllNotificationsAsRead,
   markNotificationAsRead,
 } from '../db';
-
-interface Context {
-  user?: DefaultSession['user'];
-}
+import { generateEmail } from '../mailer/mailgen';
+import { ErrorCode } from '@microwallet/shared';
+import { UserAccountProvider } from '@prisma/client';
+import { Context } from '../lib/context';
 
 export const createResolvers = (app: BootstrappedApp) => {
   const log = app.log.create('res');
@@ -22,7 +29,7 @@ export const createResolvers = (app: BootstrappedApp) => {
       getMyUnreadNotificationsCount: async (_, __, ctx: Context) => {
         log.trace(`getMyUnreadNotificationsCount`);
 
-        const user = await getUser(app.db, ctx.user!.name as string);
+        const user = await getUser(app, ctx.userId!);
 
         if (!user) {
           return 0;
@@ -33,7 +40,7 @@ export const createResolvers = (app: BootstrappedApp) => {
       getMyNotifications: async (_, { pageParam }, ctx: Context) => {
         log.trace(`getMyNotifications`);
 
-        const user = await getUser(app.db, ctx.user!.name as string);
+        const user = await getUser(app, ctx.userId!);
 
         if (!user) {
           return {
@@ -60,7 +67,7 @@ export const createResolvers = (app: BootstrappedApp) => {
       generateAblyToken: async (_, __, ctx: Context) => {
         log.trace(`generateAblyToken`);
 
-        const user = await getUser(app.db, ctx.user!.name as string);
+        const user = await getUser(app, ctx.userId!);
 
         if (user) {
           if (app.ably) {
@@ -90,7 +97,7 @@ export const createResolvers = (app: BootstrappedApp) => {
       markNotificationAsRead: async (_, { id }, ctx: Context) => {
         log.trace(`markNotificationAsRead`);
 
-        const user = await getUser(app.db, ctx.user!.name as string);
+        const user = await getUser(app, ctx.userId!);
 
         await markNotificationAsRead(app.db, user!.id as number, id);
 
@@ -101,12 +108,73 @@ export const createResolvers = (app: BootstrappedApp) => {
       markAllNotificationsAsRead: async (_: any, __: any, ctx: Context) => {
         log.trace(`markAllNotificationsAsRead`);
 
-        const user = await getUser(app.db, ctx.user!.name as string);
+        const user = await getUser(app, ctx.userId!);
 
         await markAllNotificationsAsRead(app.db, user!.id as number);
 
         return {
           success: true,
+        };
+      },
+      sendVerificationEmail: async (_, { email }) => {
+        log.trace(`sendVerificationEmail`);
+
+        const { code, blob } = await generateVerificationCodeAndBlob(
+          log,
+          email,
+        );
+
+        const { html, text } = generateEmail({
+          body: {
+            name: email,
+            signature: 'Thanks',
+            intro: [
+              'Please verify your email address by entering the following code in the web page:',
+              `<strong>${code}</strong>`,
+            ],
+            outro:
+              "Need help, or have questions? Just reply to this email, we'd love to help.",
+          },
+        });
+
+        await app.mailer.send({
+          to: email,
+          subject: `Verify your email address with code ${code}`,
+          html,
+          text,
+        });
+
+        return {
+          blob,
+        };
+      },
+      verifyEmailCode: async (_, { params }) => {
+        log.trace(`verifyEmailCode`);
+
+        const { dappId, code, blob } = params;
+
+        let email: string;
+
+        try {
+          email = await verifyCodeWithBlob(log, code, blob);
+        } catch (err: any) {
+          return {
+            error: {
+              code: ErrorCode.VERIFICATION_ERROR,
+              message: err.message,
+            },
+          };
+        }
+
+        const user = await createUserIfNotExists(app, {
+          provider: UserAccountProvider.EMAIL,
+          providerAccountId: email,
+        });
+
+        const wallet = await getOrCreateDappWallet(app, user, dappId);
+
+        return {
+          serverKey: wallet.key,
         };
       },
     },

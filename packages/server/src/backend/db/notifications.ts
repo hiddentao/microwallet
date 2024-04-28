@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { PageParam } from '@/shared/graphql/generated/types';
+import { PageParam } from '@microwallet/shared';
 
 export const getUnreadNotificationsCountForUser = async (
   db: PrismaClient,

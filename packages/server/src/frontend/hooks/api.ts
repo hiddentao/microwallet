@@ -1,9 +1,6 @@
 import { request } from 'graphql-request';
-import { MyNotifications, PageParam } from '@/shared/graphql/generated/types';
-import {
-  GetMyNotificationsQuery,
-  Notification,
-} from '@/shared/graphql/generated/graphql';
+import { MyNotifications, PageParam } from '@microwallet/shared';
+import { GetMyNotificationsQuery, Notification } from '@microwallet/shared';
 import {
   InfiniteData,
   useInfiniteQuery,
@@ -14,11 +11,11 @@ import {
 import {
   getMyNotificationsQuery,
   getMyUnreadNotificationsCountQuery,
-} from '@/shared/graphql/queries';
+} from '@microwallet/shared';
 import {
   markAllNotificationsAsReadMutation,
   markNotificationAsReadMutation,
-} from '@/shared/graphql/mutations';
+} from '@microwallet/shared';
 
 export const graphqlApiEndpoint = `/api/graphql`;
 

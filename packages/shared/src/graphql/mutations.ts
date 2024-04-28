@@ -21,3 +21,19 @@ export const generateAblyTokenMutation = graphql(`
     result: generateAblyToken
   }
 `);
+
+export const sendVerificationEmailMutation = graphql(`
+  mutation sendVerificationEmail($email: String!) {
+    result: sendVerificationEmail(email: $email) {
+      blob
+    }
+  }
+`);
+
+export const verifyEmailCodeMutation = graphql(`
+  mutation verifyEmailCode($params: EmailVerificationDataInput!) {
+    result: verifyEmailCode(params: $params) {
+      ...EmailCodeVerificationResultFragment
+    }
+  }
+`);

@@ -1,4 +1,4 @@
-import { PubSubMessage } from '@/shared/pubsub';
+import { PubSubMessage } from '@microwallet/shared';
 import { useWindowEvent } from '@better-hooks/window';
 
 export const usePubSub = (cb: (msg: PubSubMessage) => void, deps: any[]) => {

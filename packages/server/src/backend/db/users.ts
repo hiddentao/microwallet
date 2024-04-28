@@ -1,42 +1,113 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, UserAccountProvider } from '@prisma/client';
+import { retryTransaction } from './connect';
+import { BootstrappedApp } from '../bootstrap';
+import { ErrorCode, throwError } from '@microwallet/shared';
+import { generateKey } from '../lib/crypto';
+
+export interface Account {
+  provider: UserAccountProvider;
+  providerAccountId: string;
+}
 
 export const createUserIfNotExists = async (
-  db: PrismaClient,
-  wallet: string,
+  app: BootstrappedApp,
+  account: Account,
 ) => {
-  return db.$transaction(async (tx) => {
-    let u = await tx.user.findFirst({
-      where: {
-        wallet: wallet.toLowerCase(),
+  return retryTransaction(app.log, 3, async () => {
+    return await app.db.$transaction(
+      async (tx: any) => {
+        const props = {
+          provider: account.provider,
+          providerUserId: account.providerAccountId,
+        };
+
+        const user = await tx.user.findFirst({
+          where: {
+            accounts: {
+              some: props,
+            },
+          },
+          include: {
+            accounts: true,
+          },
+        });
+
+        if (user) {
+          return user;
+        }
+
+        app.log.trace(
+          `Creating user with account ${account.provider} - ${account.providerAccountId}`,
+        );
+
+        return tx.user.create({
+          data: {
+            accounts: {
+              create: props,
+            },
+          },
+          include: {
+            accounts: true,
+          },
+        });
       },
-    });
-
-    if (!u) {
-      u = await tx.user.create({
-        data: {
-          wallet: wallet.toLowerCase(),
-        },
-      });
-    }
-
-    return u;
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
   });
 };
 
 export interface User {
   id: number;
-  wallet: string;
 }
 
-export const getUser = async (
-  db: PrismaClient,
-  wallet: string,
-): Promise<User | undefined> => {
-  const ret = await db.user.findFirst({
+export const getUser = async (app: BootstrappedApp, userId: number) => {
+  return app.db.user.findUnique({
     where: {
-      wallet: wallet.toLowerCase(),
+      id: userId,
     },
   });
+};
 
-  return ret ? ret : undefined;
+export const getOrCreateDappWallet = async (
+  app: BootstrappedApp,
+  user: User,
+  dappId: String,
+) => {
+  return retryTransaction(app.log, 3, async () => {
+    return await app.db.$transaction(
+      async (tx: any) => {
+        const dapp = await tx.dapp.findFirst({
+          where: {
+            id: dappId,
+          },
+        });
+
+        if (!dapp) {
+          throwError(`Dapp not found: ${dappId}`, ErrorCode.NOT_FOUND);
+        }
+
+        app.log.trace(
+          `Upserting wallet for user ${user.id} and dapp ${dappId}`,
+        );
+
+        return await tx.userWallet.upsert({
+          where: {
+            userId: user.id,
+            dappId,
+          },
+          update: {},
+          create: {
+            dappId,
+            userId: user.id,
+            key: generateKey(32),
+          },
+        });
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
+  });
 };

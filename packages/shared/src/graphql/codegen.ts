@@ -1,7 +1,7 @@
 import path from 'path';
 import { CodegenConfig } from '@graphql-codegen/cli';
 
-const directivesPlugin = path.join(__dirname, './plugins/directives.js');
+const directivesPlugin = path.join(__dirname, './plugins/directives.cjs');
 const schema = path.join(__dirname, 'schema.ts');
 const fragments = path.join(__dirname, 'fragments.ts');
 const queries = path.join(__dirname, 'queries.ts');

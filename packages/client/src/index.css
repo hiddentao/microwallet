@@ -1,13 +1,41 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  :root {
+    --header-height: 56px;
+  }
+
+  * {
+    box-sizing: border-box;
+    @apply transition-props;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+  }
+
+  a,
+  a:link,
+  a:visited {
+    @apply text-anchor;
+
+    &:hover {
+      @apply bg-anchor text-black;
+    }
+
+    &.no-anchor-hover-styles {
+      &:hover {
+        @apply bg-transparent text-current;
+      }
+    }
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+[aria-label='Switch Networks'] {
+  @apply !hidden;
 }

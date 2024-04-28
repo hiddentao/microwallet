@@ -1,0 +1,42 @@
+{
+  "name": "@microwallet/shared",
+  "version": "0.1.0",
+  "description": "µWallet shared libraries.",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "package.json"
+  ],
+  "scripts": {
+    "codegen": "graphql-code-generator --config ./src/graphql/codegen.ts",
+    "build": "pnpm codegen && pnpm tsc && pnpm tsc -p tsconfig-cjs.json",
+    "dev": "pnpm nodemon --watch src --ext js,ts,json --exec 'pnpm build'"
+  },
+  "dependencies": {
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "date-fns": "^2.30.0",
+    "graphql": "^16.8.1",
+    "graphql-request": "^6.1.0",
+    "graphql-scalars": "^1.22.4",
+    "graphql-tag": "^2.12.6",
+    "json-bigint-patch": "^0.0.8",
+    "lodash": "^4.17.21",
+    "typescript": "^4.9.5"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-codegen/fragment-matcher": "^5.0.0",
+    "@graphql-codegen/plugin-helpers": "^5.0.1",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-resolvers": "^4.0.1",
+    "@types/lodash": "^4.14.200",
+    "graphql-code-generator": "^0.18.2",
+    "nodemon": "^3.0.1"
+  }
+}
