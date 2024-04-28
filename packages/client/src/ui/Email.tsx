@@ -7,6 +7,7 @@ import { Button } from './Button'
 import { onCancel } from '@/utils'
 import { Wallet } from '@microwallet/shared'
 import { ErrorMessageBox } from './ErrorMessageBox'
+import { useGlobalContext } from '../contexts/global'
 
 const EmailInput: FC<{ onBlob: (blob: string) => void }> = ({ onBlob }) => {
   const progress = useProgress()
@@ -109,17 +110,19 @@ const VerifyCode: FC<{
       <Button type="submit" inProgress={isLoading}>
         Verify code
       </Button>
-      <Button type="button" onClick={onCancel}>Cancel</Button>
+      {progress.error ? <ErrorMessageBox>{progress.error}</ErrorMessageBox> : null}
+      <Button type="button" onClick={onCancel}>Go back</Button>
     </form>
   )
 }
 
 export const Email = () => {
   const [blob, setBlob] = useState<string>()
+  const { setServerKey } = useGlobalContext()
 
   const onVerified = useCallback((serverKey: string) => {
-    console.log(serverKey)
-  }, [])
+    setServerKey(serverKey)
+  }, [setServerKey])
 
   const onCancel = useCallback(() => {  
     setBlob(undefined)

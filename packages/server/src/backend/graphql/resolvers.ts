@@ -3,7 +3,7 @@ import {
   getOrCreateDappWallet,
   getUser,
 } from '../db/users';
-import { ONE_MINUTE, defaultResolvers } from '@microwallet/shared';
+import { ONE_MINUTE, defaultResolvers, throwError } from '@microwallet/shared';
 import { BootstrappedApp } from '../bootstrap';
 import {
   generateVerificationCodeAndBlob,
@@ -159,12 +159,7 @@ export const createResolvers = (app: BootstrappedApp) => {
         try {
           email = await verifyCodeWithBlob(log, code, blob);
         } catch (err: any) {
-          return {
-            error: {
-              code: ErrorCode.VERIFICATION_ERROR,
-              message: err.message,
-            },
-          };
+          throwError(err.message, ErrorCode.VERIFICATION_ERROR)
         }
 
         const user = await createUserIfNotExists(app, {
@@ -176,8 +171,31 @@ export const createResolvers = (app: BootstrappedApp) => {
 
         return {
           serverKey: wallet.key,
+          clientChecksum: wallet.clientChecksum,
         };
       },
+      updateClientChecksum: async (_, { params }, ctx: Context) => {
+        log.trace(`updateClientChecksum`);
+
+        // TODO
+        // const user = await getUser(app, ctx.userId!);
+
+        // if (!user) {
+        //   throwError('User not found', ErrorCode.NOT_FOUND);
+        // }
+
+        // const { dappKey, clientChecksum } = params;
+
+        // const wallet = await getOrCreateDappWallet(app, user, dappKey);
+
+        // if (wallet.clientChecksum !== clientChecksum) {
+        //   throwError('Client checksum mismatch', ErrorCode.INVALID_INPUT);
+        // }
+
+        return {
+          success: true,
+        };
+      }
     },
   } as Resolvers;
 };

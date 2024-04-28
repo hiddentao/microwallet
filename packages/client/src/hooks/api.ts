@@ -4,7 +4,7 @@ import {
   sendVerificationEmailMutation,
   verifyEmailCodeMutation,
 } from '@microwallet/shared';
-import { EmailVerificationDataInput } from '@microwallet/shared';
+import { VerifyEmailCodeInput } from '@microwallet/shared';
 import { useGlobalContext } from '../contexts/global';
 
 export const useSendVerificationEmail = () => {
@@ -23,7 +23,7 @@ export const useVerifyEmailCode = () => {
   const { apiEndpoint } = useGlobalContext();
 
   return useMutation({
-    mutationFn: async (params: EmailVerificationDataInput) => {
+    mutationFn: async (params: VerifyEmailCodeInput) => {
       return request(apiEndpoint, verifyEmailCodeMutation, { params });
     },
   });

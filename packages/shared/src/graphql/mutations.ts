@@ -31,9 +31,17 @@ export const sendVerificationEmailMutation = graphql(`
 `);
 
 export const verifyEmailCodeMutation = graphql(`
-  mutation verifyEmailCode($params: EmailVerificationDataInput!) {
+  mutation verifyEmailCode($params: VerifyEmailCodeInput!) {
     result: verifyEmailCode(params: $params) {
-      ...EmailCodeVerificationResultFragment
+      ...WalletFragment
+    }
+  }
+`);
+
+export const updateClientChecksumMutation = graphql(`
+  mutation updateClientChecksum($params: UpdateClientChecksumInput!) {
+    result: updateClientChecksum(params: $params) {
+      ...SuccessFragment
     }
   }
 `);

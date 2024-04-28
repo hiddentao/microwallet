@@ -39,10 +39,15 @@ export const schema = gql`
     perPage: Int!
   }
 
-  input EmailVerificationDataInput {
+  input VerifyEmailCodeInput {
     dappKey: String!
     code: String!
     blob: String!
+  }
+
+  input UpdateClientChecksumInput {
+    dappKey: String!
+    clientChecksum: String!
   }
 
   type EmailVerificationData {
@@ -51,13 +56,13 @@ export const schema = gql`
 
   type Wallet {
     serverKey: String!
+    clientChecksum: String!
   }
 
   ################################################################################################################
   # NOTE: For untion types the code generator only supports two sub-types: Error and whatever the success type is
   ################################################################################################################
   # union MutationResult = Success | Error
-  union EmailCodeVerificationResult = Wallet | Error
 
   type Query {
     getMyNotifications(pageParam: PageParam!): MyNotifications! @auth
@@ -68,9 +73,10 @@ export const schema = gql`
     generateAblyToken: JSON @auth
     markNotificationAsRead(id: PositiveInt!): Success! @auth
     markAllNotificationsAsRead: Success! @auth
+    updateClientChecksum(params: UpdateClientChecksumInput!): Success! @auth
     sendVerificationEmail(email: String!): EmailVerificationData!
     verifyEmailCode(
-      params: EmailVerificationDataInput!
-    ): EmailCodeVerificationResult!
+      params: VerifyEmailCodeInput!
+    ): Wallet!
   }
 `;
