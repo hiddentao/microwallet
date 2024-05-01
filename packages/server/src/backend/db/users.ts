@@ -1,7 +1,7 @@
 import { Prisma, UserAccountProvider } from '@prisma/client';
 import { retryTransaction } from './connect';
 import { BootstrappedApp } from '../bootstrap';
-import { ErrorCode, throwError } from '@microwallet/shared';
+import { ErrorCode, throwError } from '@uwallet/shared';
 import { generateKey } from '../lib/crypto';
 
 export interface Account {

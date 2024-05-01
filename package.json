@@ -1,7 +1,7 @@
 {
-  "name": "@microwallet/monorepo",
+  "name": "@uwallet/monorepo",
   "version": "1.0.0",
-  "description": "Microwallet monorepo",
+  "description": "µWallet monorepo",
   "private": true,
   "main": "index.js",
   "scripts": {

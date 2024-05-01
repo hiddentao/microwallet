@@ -5,7 +5,7 @@ import { useField } from '../hooks/forms'
 import { TextInput } from './Form'
 import { Button } from './Button'
 import { onCancel } from '@/utils'
-import { Wallet } from '@microwallet/shared'
+import { Wallet } from '@uwallet/shared'
 import { ErrorMessageBox } from './ErrorMessageBox'
 import { useGlobalContext } from '../contexts/global'
 

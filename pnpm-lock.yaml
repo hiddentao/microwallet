@@ -56,7 +56,7 @@ importers:
 
   packages/client:
     dependencies:
-      '@microwallet/shared':
+      '@uwallet/shared':
         specifier: workspace:*
         version: link:../shared
       '@rjshooks/use-progress':
@@ -138,7 +138,7 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: ^3.2.0
         version: 3.2.0(graphql@16.8.1)
-      '@microwallet/shared':
+      '@uwallet/shared':
         specifier: workspace:*
         version: link:../shared
       '@prisma/client':

@@ -3,13 +3,13 @@ import {
   getOrCreateDappWallet,
   getUser,
 } from '../db/users';
-import { ONE_MINUTE, defaultResolvers, throwError } from '@microwallet/shared';
+import { ONE_MINUTE, defaultResolvers, throwError } from '@uwallet/shared';
 import { BootstrappedApp } from '../bootstrap';
 import {
   generateVerificationCodeAndBlob,
   verifyCodeWithBlob,
 } from '../lib/verifyEmail';
-import { Resolvers } from '@microwallet/shared';
+import { Resolvers } from '@uwallet/shared';
 import {
   getNotificationsForUser,
   getUnreadNotificationsCountForUser,
@@ -17,7 +17,7 @@ import {
   markNotificationAsRead,
 } from '../db';
 import { generateEmail } from '../mailer/mailgen';
-import { ErrorCode } from '@microwallet/shared';
+import { ErrorCode } from '@uwallet/shared';
 import { UserAccountProvider } from '@prisma/client';
 import { Context } from '../lib/context';
 
@@ -171,7 +171,7 @@ export const createResolvers = (app: BootstrappedApp) => {
 
         return {
           serverKey: wallet.key,
-          clientChecksum: wallet.clientChecksum,
+          clientData: wallet.clientData,
         };
       },
       updateClientChecksum: async (_, { params }, ctx: Context) => {

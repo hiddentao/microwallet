@@ -6,8 +6,8 @@ import {
   useMarkNotificationAsRead,
   useMyNotifications,
 } from '@/frontend/hooks';
-import { dateFriendlyFormat } from '@microwallet/shared';
-import { Notification } from '@microwallet/shared';
+import { dateFriendlyFormat } from '@uwallet/shared';
+import { Notification } from '@uwallet/shared';
 import { FC, PropsWithChildren, useCallback, useMemo } from 'react';
 import { cn } from '../utils';
 import { Button } from './Button';
@@ -24,7 +24,7 @@ import { Loading } from './Loading';
 import { OnceVisibleInViewport } from './OnceVisibleInViewport';
 import { PingAnimation } from './PingAnimation';
 import { usePubSub } from '../hooks/pubsub';
-import { PubSubMessageType } from '@microwallet/shared';
+import { PubSubMessageType } from '@uwallet/shared';
 
 const Item: FC<{ data: Notification }> = ({ data }) => {
   const read = useMemo(() => data.read, [data.read]);

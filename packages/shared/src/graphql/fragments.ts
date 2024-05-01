@@ -18,7 +18,7 @@ export const SuccessFragment = graphql(`
 export const WalletFragment = graphql(`
   fragment WalletFragment on Wallet {
     serverKey
-    clientChecksum
+    clientData
   }
 `);
 

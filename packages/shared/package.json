@@ -1,5 +1,5 @@
 {
-  "name": "@microwallet/shared",
+  "name": "@uwallet/shared",
   "version": "0.1.0",
   "description": "µWallet shared libraries.",
   "main": "dist/cjs/index.js",

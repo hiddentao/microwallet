@@ -1,7 +1,7 @@
 import { jobs } from './generated/mappings';
 import { JobParams } from './types';
 import { bootstrap } from '@/backend/bootstrap';
-import { ONE_MINUTE, ONE_SECOND, dateBefore } from '@microwallet/shared';
+import { ONE_MINUTE, ONE_SECOND, dateBefore } from '@uwallet/shared';
 import {
   scheduleCronJob,
   getNextPendingJob,

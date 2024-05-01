@@ -8,7 +8,7 @@ Pre-requisites:
 - [Node.js](https://nodejs.org) 20+
 - [PNPM](https://pnpm.io)
 
-Ensure your postgres server is running at port `5432`. You should have an admin user called `postgres` with no password enabled. Create a database called `microwallet` and ensure the `postgres` user is the owner.
+Ensure your postgres server is running at port `5432`. You should have an admin user called `postgres` with no password enabled. Create a database called `uwallet` and ensure the `postgres` user is the owner.
 
 Install packages:
 

@@ -1,4 +1,4 @@
-# @microwallet/shared
+# @uwallet/shared
 
 Shared libraries for µWallet.
 

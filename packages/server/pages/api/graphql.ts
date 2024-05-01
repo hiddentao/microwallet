@@ -4,10 +4,10 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ApolloServer, HeaderMap } from '@apollo/server';
 
 import { bootstrap } from '../../src/backend/bootstrap';
-import { ErrorCode, throwError } from '@microwallet/shared';
-import { schema } from '@microwallet/shared';
+import { ErrorCode, throwError } from '@uwallet/shared';
+import { schema } from '@uwallet/shared';
 import { createResolvers } from '../../src/backend/graphql/resolvers';
-import { directives } from '@microwallet/shared';
+import { directives } from '@uwallet/shared';
 import { Context } from '../../src/backend/lib/context';
 
 //

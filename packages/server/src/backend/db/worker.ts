@@ -1,6 +1,6 @@
 import { PrismaClient, WorkerJob } from '@prisma/client';
 import { parseCronExpression } from 'cron-schedule';
-import { ONE_HOUR, dateFrom } from '@microwallet/shared';
+import { ONE_HOUR, dateFrom } from '@uwallet/shared';
 import { WorkerJobType } from '../../worker/generated/exportedTypes';
 
 export interface WorkerJobConfig<T extends object> {

@@ -1,4 +1,4 @@
-# @microwallet/client
+# @uwallet/client
 
 Client for µWallet. This includes the embeddable widget, React components, client SDK and a demo app testing out the widget.
 

@@ -56,7 +56,7 @@ export const schema = gql`
 
   type Wallet {
     serverKey: String!
-    clientChecksum: String!
+    clientData: String
   }
 
   ################################################################################################################

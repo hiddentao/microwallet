@@ -1,7 +1,7 @@
 import { LogInterface } from '../logging';
 import { decrypt, encrypt } from './crypto';
 import { serverConfig } from '@/config/server';
-import { ONE_HOUR, truncate } from '@microwallet/shared';
+import { ONE_HOUR, truncate } from '@uwallet/shared';
 
 export interface VerifyEmailCodeBlob {
   email: string;

@@ -2,7 +2,7 @@ import Ably from 'ably';
 import { DummyMailer, Mailer, MailgunMailer } from '../mailer';
 import { createLog } from '../logging';
 import { serverConfig } from '../../config/server';
-import { PubSubMessageType } from '@microwallet/shared';
+import { PubSubMessageType } from '@uwallet/shared';
 import { User, connectDb, createNotification } from '../db';
 
 export interface BootstrapParams {

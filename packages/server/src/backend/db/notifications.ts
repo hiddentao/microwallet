@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { PageParam } from '@microwallet/shared';
+import { PageParam } from '@uwallet/shared';
 
 export const getUnreadNotificationsCountForUser = async (
   db: PrismaClient,

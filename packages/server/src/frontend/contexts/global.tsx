@@ -6,8 +6,8 @@ import { Session } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import request from 'graphql-request'
 import { graphqlApiEndpoint } from '../hooks'
-import { generateAblyTokenMutation } from '@microwallet/shared'
-import { PubSubMessage } from '@microwallet/shared'
+import { generateAblyTokenMutation } from '@uwallet/shared'
+import { PubSubMessage } from '@uwallet/shared'
 
 export interface GlobalContextValue {
   user: Session['user']

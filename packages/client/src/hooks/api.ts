@@ -3,8 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import {
   sendVerificationEmailMutation,
   verifyEmailCodeMutation,
-} from '@microwallet/shared';
-import { VerifyEmailCodeInput } from '@microwallet/shared';
+} from '@uwallet/shared';
+import { VerifyEmailCodeInput } from '@uwallet/shared';
 import { useGlobalContext } from '../contexts/global';
 
 export const useSendVerificationEmail = () => {
